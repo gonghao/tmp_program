@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8" />
+	<meta name="author" content="VB - Vitor Baum" />
+	{?$desc}
+	<meta name="description" content="{$meta_desc}" />
+	{/$desc}
+	<meta name="text:Copyright Notice" content="" />
+	<meta name="text:Google Analytics" content="" />
+	<meta name="text:Disqus Shortname" content="" />
+	<meta name="if:Show Tumblr Credit" content="1" />
+	<meta name="color:Header And Footer Link" content="#666666" />
+	<meta name="color:Header And Footer Hover Link" content="#ffffff" />
+	<meta name="color:Post Link" content="#2eacc5" />
+	<meta name="color:Post Hover Link" content="#1c6e7e" />
+	<meta name="color:Heading Link" content="#333333" />
+	<meta name="color:Heading Hover Link" content="#000000" />
+	<meta name="color:Meta Link" content="#7e7e43" />
+	<meta name="color:Meta Hover Link" content="#525219" />
+
+	<title>{$title}</title>
+
+	<link rel="shortcut icon" href="{Favicon}">
+	<link rel="alternate" type="application/rss+xml" href="{$rss}">
+
+	<link rel="stylesheet" href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic|PT+Sans+Narrow:regular,bold">
+	<link rel="stylesheet" href="http://static.tumblr.com/mduqdra/LULlgggo8/jquery.fancybox-1.3.4.min.css" />
+	<link rel="stylesheet" href="http://static.tumblr.com/mduqdra/z6Glggyp6/gk.min.css" />
+	<style type="text/css">
+		a { color: {color:Post Link}; }
+		a:hover { color : {color:Post Hover Link}; }
+		#header a, #footer a, #post-navigation a { color: {color:Header And Footer Link}; }
+		#header a:hover, #footer a:hover, #post-navigation a:hover { color: {color:Header And Footer Hover Link}; }
+		.posts h2 a { color: {color:Heading Link}; }
+		.posts h2 a:hover { color: {color:Heading Hover Link}; }
+		.posts:hover .meta a { color: {color:Meta Link}; }
+		.posts:hover .meta a:hover { color: {color:Meta Hover Link}; }
+
+		{CustomCSS}
+	</style>
+
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.4.4/jquery.min.js"></script>
+	<script src="http://static.tumblr.com/mduqdra/rdSlgg8r6/jquery.fancybox-1.3.4.pack.js"></script>
+	<script src="http://static.tumblr.com/mduqdra/hTUlgg8rl/jquery.scrollto-1.4.2-min.js"></script>
+	<script src="http://static.tumblr.com/mduqdra/Fp5lgggnu/gk.min.js"></script>
+
+</head>
+<body>
+	<div id="wrapper">
+
+		<div id="header">
+			<ul id="extras-nav">
+				<li><a href="/random">Random</a></li>
+				<li><a href="/mobile">Mobile</a></li>
+				<li><a href="/archive">Archives</a></li>
+				<li><a href="{$rss}">RSS</a></li>
+			</ul>
+			<h1><a id="title" href="/">{$title}</a></h1>
+			{?$desc}
+			<p>{$desc}</p>
+			{/$desc}
+			<ul id="navigation">
+				
+				
+				<li><a id="search-link" href="#">Search</a></li>
+			</ul>
+		</div>
+
+		<div id="search" style="display: none;">
+			<form action="/search" method="get">
+				<label for="keyword">Please, type your search and hit enter:</label>
+				<input id="keyword" name="q" type="text" value="{SearchQuery}" />
+			</form>
+		</div>
+
+		<div id="content">
+
+			
+
+			
+
+			
+
+			{?loop:posts}
+			<div class="{?text}text-post{/text}{?video}video-post{/video}{?audio}audio-post{/audio}{?link}link-post{/link}{?photos}photo-post{/photos} posts">
+			{?text}
+				{?$text_title}
+				<h2><a href="{$post_url}">{$text_title}</a></h2>
+				{/$text_title}
+				<div>
+					{$text_content}
+				</div>
+			{/text}
+			{?video}
+				<div class="frame">
+					{$video_player}
+				</div>
+				{?$video_desc}
+				<div class="caption">
+					{$video_desc}
+				</div>
+				{/$video_desc}
+			{/video}
+			
+			{?audio}
+				<div class="frame">
+					<div class="track{block:AlbumArt} cover{/block:AlbumArt}">{$audio_player} {block:AlbumArt}<img class="art" src="{$audio_cover}" height="50" width="50" />{/block:AlbumArt}</div>
+					{?$audio_song}
+					<h2><a href="{$post_url}">{$audio_song}</a></h2>
+					{/$audio_song}
+				</div>
+				{?$audio_desc}
+				<div class="caption">
+					{$audio_desc}
+				</div>
+				{/$audio_desc}
+			{/audio}
+			{?link}
+				<h2><a href="{$link_url}" {Target}>{$link_title}</a></h2>
+				{?$link_desc}
+				<div class="caption">
+					{$link_desc}
+				</div>
+				{/$link_desc}
+			{/link}
+			
+			
+			{?photos}
+				{?loop:photos}
+				<div class="frame">
+					<img src="{$photo_500}" alt="{PhotoAlt}" />
+					<a class="zoom" href="{$photo_1280}" title="Click for high-res version">Click for high-res version</a>
+				</div>
+				{?$photos_title}
+				<div class="caption">
+					{$photos_title}
+				</div>
+				{/$photos_title}
+				{/loop:photos}
+			{/photos}
+			
+				<div class="meta">
+					<p><span class="permalink">&infin;</span><a href="{$post_url}">Posted on {$post_date|date_format:"month"} {$post_date|date_format:"day_of_month"}, {$post_date|date_format:"year"}</a></p>
+					{?reblog}<p>Reblogged from: <a href="{$reblog_post_url}">{$reblog_blog_name}</a></p>{/reblog}
+					
+					{?notes}<p>Notes: <a href="{$post_url}#notes">{$post_notes_count}</a></p>{/notes}
+					
+					{?tags}<p>Tags: {?loop:tags}<a class="tags" href="{$tag_url}">{$tag_name}</a><span class="tags-sep">,</span>{/loop:tags}</p>{/tags}
+				</div>
+			</div>
+			{/loop:posts}
+
+			
+
+			
+
+			{?pagination}
+			<ul id="post-navigation" class="clearfix">
+				{?page_prev}
+				<li><a id="prev" href="{$page_prev_url}">&larr; Previous Page</a></li>
+				{/page_prev}
+				{?page_next}
+				<li><a id="next" href="{$page_next_url}">Next Page &rarr;</a></li>
+				{/page_next}
+			</ul>
+			{/pagination}
+
+			<a id="top" href="#header" title="Top of Page">Top of Page</a>
+		</div>
+
+		<div id="footer">
+			<p>&copy; {$title}{block:IfCopyrightNotice} &mdash; {text:Copyright Notice}{/block:IfCopyrightNotice}</p>
+			{block:IfShowTumblrCredit}<p>Content powered by <a href="http://tumblr.com">Tumblr</a>.</p>{/block:IfShowTumblrCredit}
+		</div>
+
+	</div>
+
+	
+
+	
+</body>
+</html>

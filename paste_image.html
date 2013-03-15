@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Test Paste Image</title>
+    <style>
+    #container { width: 500px; height: 200px; border: 2px solid #ccc; padding: 4px; }
+    #container:focus { outline: none; }
+    </style>
+    <script>
+    if (typeof $ === 'undefined') {
+        window.$ = {};
+    }
+    </script>
+    <script src="http://ghsky.douban.com:9000/js/lib/paste-to-image.js"></script>
+</head>
+<body>
+    <h1>Test Paste Image</h1>
+    <h2>Div Contenteditable</h2>
+    <div contenteditable="true" id="container">Paste Image Here!</div>
+    <h2>Textarea</h2>
+    <textarea id="textarea" cols="80" rows="20"></textarea>
+    <script>
+    (function() {
+        var container = document.getElementById('container');
+        var textarea = document.getElementById('textarea');
+
+        textarea.focus();
+        textarea.setSelectionRange(0, 4);
+
+        // $.PasteToImage(container, {
+        //     complete: function(data) {
+        //         var img = new Image();
+        //         img.src = data.dataURI;
+        //         document.body.appendChild(img);
+        //         console.log(data)
+        //     }
+        // });
+
+    })();
+    </script>
+</body>
+</html>

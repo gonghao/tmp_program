@@ -1,0 +1,471 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Test Circles</title>
+    <style>
+    body { font: 14px/1.5 arial, sans-serif; }
+    ul, ol { list-style: none; }
+    .people-section { padding-bottom: 20px; border-bottom: 1px solid #ddd; }
+    .people-list, .circle-list { font-size: 0; }
+    .people-list .person { display: inline-block; vertical-align: top; border: 1px solid #ccc; border-radius: 2px; padding: 4px; margin-right: 10px; background: #fff; cursor: move; }
+    .people-list .person { -webkit-transition: box-shadow 0.3s ease-in-out; -moz-transition: box-shadow 0.3s ease-in-out; transition: box-shadow 0.3s ease-in-out; }
+    .people-list .person:hover { box-shadow: 0 0 4px rgba(0, 0, 0, 0.5); }
+    .people-list .person.selected { background: #63abf7; }
+    .people-list .person.clone-parent { opacity: 0.6; }
+    .people-list .person.rotate-clockwise { -webkit-transform: rotate(7.5deg); -moz-transform: rotate(7.5deg); -ms-transform: rotate(7.5deg); -o-transform: rotate(7.5deg); transform: rotate(7.5deg); }
+    .people-list .person.rotate-counter-clockwise { -webkit-transform: rotate(-7.5deg); -moz-transform: rotate(-7.5deg); -ms-transform: rotate(-7.5deg); -o-transform: rotate(-7.5deg); transform: rotate(-7.5deg); }
+    .people-list .person .avatar { float: left; width: 48px; height: 48px; margin-right: 5px; }
+    .people-list .person .name { font-size: 14px; }
+    .circle-section { padding-top: 20px; }
+    .circle-list .circle { display: inline-block; position: relative; margin: 22px; width: 92px; height: 92px; border-radius: 92px; background: #eee; border: 2px solid #bbb; vertical-align: top; cursor: pointer; }
+    .circle-list .circle { -webkit-transition: none 0.3s ease-in-out; -moz-transition: none 0.3s ease-in-out; transition: none 0.3s ease-in-out; -webkit-transition-property: margin, width, height, border-radius; -moz-transition-property: margin, width, height, border-radius; transition-property: margin, width, height, border-radius; }
+    .circle-list .circle.hover,
+    .circle-list .circle:hover { margin: 0; width: 132px; height: 132px; border-radius: 132px; }
+    .circle-list .circle .members-list { display: none; }
+    .circle-list .circle .members-list li { width: 30px; height: 30px; border-radius: 30px; position: absolute; top: 1px; left: 50px; }
+    .circle-list .circle.hover .members-list,
+    .circle-list .circle:hover .members-list { display: block; }
+    .circle-list .circle.ui-draggable-dragging,
+    .circle-list .circle.ui-draggable-dragging:hover { margin: 20px; width: 92px; height: 92px; border-radius: 92px; }
+    .circle-list .circle.insert-before:before,
+    .circle-list .circle.insert-after:after { display: block; content: ''; height: 92px; width: 2px; background: #eee; position: absolute; top: 0; right: -23px; }
+    .circle-list .circle.insert-before:before { left: -23px; }
+    .circle .content,
+    .circle .content .content-wrapper { width: 68px; height: 68px; }
+    .circle .content { margin: -34px auto 0; position: relative; top: 50%; background: #5e99cd; border-radius: 68px; font-size: 14px; overflow: hidden; box-shadow: 0 0 2px rgba(0, 0, 0, 0.4) inset; }
+    .circle .content .content-wrapper { display: table-cell; vertical-align: middle; }
+    .circle .content .title,
+    .circle .content .count { display: block; text-align: center; color: #fff; }
+    .circle .content .count { font-weight: bold; opacity: 0.5; }
+    </style>
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.0/jquery.min.js"></script>
+    <script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.8.23/jquery-ui.min.js"></script>
+</head>
+<body>
+    <h1>Test Circles</h1>
+    <section class="people-section">
+        <ul class="people-list">
+            <li class="person">
+                <div class="avatar" style="background-color: red"></div>
+                <span class="name">Mike</span>
+            </li>
+            <li class="person">
+                <div class="avatar" style="background-color: blue"></div>
+                <span class="name">Jack</span>
+            </li>
+            <li class="person">
+                <div class="avatar" style="background-color: green"></div>
+                <span class="name">John</span>
+            </li>
+        </ul>
+    </section>
+    <section class="circle-section">
+        <ul class="circle-list">
+            <li class="circle">
+                <div class="content">
+                    <div class="content-wrapper">
+                        <span class="title">Friend</span>
+                        <span class="count">0</span>
+                    </div>
+                </div>
+            </li>
+            <li class="circle">
+                <div class="content">
+                    <div class="content-wrapper">
+                        <span class="title">IT</span>
+                        <span class="count">0</span>
+                    </div>
+                </div>
+            </li>
+            <li class="circle">
+                <div class="content">
+                    <div class="content-wrapper">
+                        <span class="title">Family</span>
+                        <span class="count">0</span>
+                    </div>
+                </div>
+            </li>
+            <li class="circle">
+                <div class="content">
+                    <div class="content-wrapper">
+                        <span class="title">Colleague</span>
+                        <span class="count">0</span>
+                    </div>
+                </div>
+            </li>
+        </ul>
+    </section>
+    <script>
+    $(function() {
+        var gCirclesPosition = [],
+            g$HoverCache = [],
+            g$Circles = $('.circle-list .circle');
+
+        function updateCircles() {
+            gCirclesPosition = [];
+
+            $('.circle-list .circle').each(function(i, ele) {
+                var $ele = $(ele)
+                    ,pos = $ele.position();
+
+                gCirclesPosition.push({
+                    $ele: $ele
+                    ,x1: pos.left
+                    ,y1: pos.top
+                    ,x2: pos.left + $ele.outerWidth(true)
+                    ,y2: pos.top + $ele.outerHeight(true)
+                });
+            });
+        }
+
+        function Circle($ele) {
+            this.$ele = $ele;
+            this.width = $ele.outerWidth(true);
+            this.height = $ele.outerHeight(true);
+            this.members = [];
+            this.R = 66;
+            this.r = 49;
+            this.PER_RAD = Math.asin(16 / this.r) * 2;
+            this.left = 0;
+            this.top = 0;
+        }
+
+        Circle.prototype = {
+            constructor: Circle
+
+            , addMembers: function($mem) {
+                var self = this;
+
+                if ($mem.length > 1) {
+                    return $mem.each(function(i, ele) {
+                        self.addMembers($(ele));
+                    });
+                }
+
+                var members = self.members
+                    , count
+                    , $container
+                    , name
+                    , color
+                    ;
+
+                if ($.inArray($mem.get(0), members) > -1) {
+                    return;
+                }
+
+                if ((count = members.length) === 0) {
+                    $container = $('<ul class="members-list"></ul>').appendTo(self.$ele);
+                    $container.dblclick(function(evt) {
+                        var target = evt.target;
+                        if (target.nodeName === 'LI') {
+                            self.removeMembers($(target));
+                        }
+                    });
+                    self.left = 51;
+                    self.top = 1;
+                } else {
+                    $container = self.$ele.find('.members-list');
+                    self.left = self.R + self.r * Math.sin(self.PER_RAD * count) - 15;
+                    self.top = self.R - self.r * Math.cos(self.PER_RAD * count) - 15;
+                }
+
+                name = $mem.find('.name').text();
+                color = $mem.find('.avatar').css('background-color');
+
+                $('<li title="' + name + '">' + name + '</li>')
+                    .css({
+                        backgroundColor: color
+                        , left: self.left + 'px'
+                        , top: self.top + 'px'
+                    })
+                    .appendTo($container);
+
+                members.push($mem.get(0));
+
+                self.$ele.find('.count').text(members.length);
+            }
+
+            , removeMembers: function($ele) {
+                var self = this
+                    , index = $ele.parent().index($ele)
+                    , $reverseLis = $($ele.parent().find('li').get().reverse())
+                    , reverseIndex = $reverseLis.length - 1 - index;
+                    ;
+
+                $reverseLis.each(function(i, ele) {
+                    var $ele, pos;
+
+                    if (i < reverseIndex) {
+                        $ele = $(ele);
+                        pos = $(ele).prev().position();
+                        if (pos) {
+                            $ele.css({
+                                left: pos.left + 'px'
+                                , top: pos.top + 'px'
+                            });
+                        }
+                    }
+                });
+
+                $ele.remove();
+                self.members.splice(index, 1);
+
+                self.$ele.find('.count').text(self.members.length);
+            }
+        };
+
+        updateCircles();
+
+        g$Circles
+            .each(function(i, ele) {
+                $(ele).data('Circle', new Circle($(ele)));
+            })
+            .draggable({
+                opacity: 0.8
+                , axis: 'x'
+                , revert: true
+                , helper: 'clone'
+            })
+            .bind('dragstart', function(evt, ui) {
+                var $target = $(evt.target)
+                    ,$circles = $('.circle-list .circle').not(ui.helper)
+                    ,index = $circles.index($target);
+
+                g$Circles.draggable('option', 'revert', true);
+
+                $target
+                    .css('opacity', 0.6)
+                    .data('draginfo', {
+                        index: index
+                        ,$before: $circles.slice(0, index)
+                        ,$after: $circles.slice(index + 1)
+                    });
+
+            })
+            .bind('drag', function(evt, ui) {
+                var pos = ui.position,
+                    $target = $(evt.target),
+                    dragInfo = $target.data('draginfo'),
+                    dropped = false;
+
+                dragInfo.$before
+                    .removeClass('insert-before')
+                    .each(function(i, ele) {
+                        var $ele = $(ele),
+                            left = $ele.position().left;
+                        if (pos.left < left) {
+                            $ele.addClass('insert-before');
+                            dropped = true;
+                            return false;
+                        }
+                    });
+
+                $(dragInfo.$after.get().reverse())
+                    .removeClass('insert-after')
+                    .each(function(i, ele) {
+                        var $ele = $(ele),
+                            right = $ele.position().left;
+                        if (pos.left > right) {
+                            $ele.addClass('insert-after');
+                            dropped = true;
+                            return false;
+                        }
+                    });
+
+                dropped && g$Circles.draggable('option', 'revert', false);
+            })
+            .bind('dragstop', function(evt, ui) {
+                var $target = $(evt.target),
+                    $insertEle;
+
+                if (($insertEle = g$Circles.filter('.insert-before')) && $insertEle.length > 0) {
+                    $target.insertBefore($insertEle);
+                    updateCircles();
+                }
+
+                if (($insertEle = g$Circles.filter('.insert-after')) && $insertEle.length > 0) {
+                    $target.insertAfter($insertEle);
+                    updateCircles();
+                }
+
+                $target
+                    .css('opacity', '')
+                    .data('draginfo', '');
+
+                g$Circles.removeClass('insert-before insert-after');
+
+            });
+
+        $('.people-list .person')
+            .click(function(evt) {
+                $(this).toggleClass('selected');
+            })
+            .draggable({
+                opacity: 0.8
+                , helper: 'clone'
+
+            })
+            .bind('dragstart', function(evt, ui) {
+                var $target = $(evt.target)
+                    , $parent = $target.parent()
+                    , $clone = $(ui.helper)
+                    , $selected
+                    , $selectedClone
+                    , targetPos = ui.position;
+
+                ui.helper.css('z-index', '2');
+
+                $clone.addClass('selected');
+
+                // elements have been selected
+                $selected = $target.siblings('.selected').not($target.add($clone)).addClass('clone-parent');
+                $selectedClone = $([]);
+                $selected.each(function(i, ele) {
+                    var $ele = $(ele), pos = $ele.position();
+                    $selectedClone = $selectedClone.add($ele.clone().css({
+                        position: 'absolute'
+                        , left: pos.left + 'px'
+                        , top: pos.top + 'px'
+                        , zIndex: 1
+                    }).addClass('cloned').removeClass('clone-parent').data('initPos', { left: pos.left, top: pos.top }).appendTo($parent));
+                });
+
+                $selectedClone.filter(':even').addClass('rotate-counter-clockwise');
+                $selectedClone.filter(':odd').addClass('rotate-clockwise');
+
+                $target
+                    .addClass('selected clone-parent')
+                    .data('grouped', $selectedClone.length === 0)
+                    .data('lastDragTimestamp', new Date())
+                    .data('selected', $selected)
+                    .data('selectedClone', $selectedClone);
+            })
+            .bind('drag', function(evt, ui) {
+                var pos = ui.position
+                    , $hover = g$HoverCache
+                    , $target = $(evt.target)
+                    , $selectedClone = $target.data('selectedClone')
+                    , timer;
+
+                $target.data('lastDragTimestamp', new Date());
+
+                // clean cache
+                g$HoverCache = [];
+
+                // set selected elements
+                if ($target.data('grouped')) {
+                    $selectedClone.css({
+                        left: pos.left + 'px'
+                        , top: pos.top + 'px'
+                    });
+                } else {
+
+                    if (timer = $target.data('timer')) {
+                        clearTimeout(timer);
+                        $target.data('timer', null);
+                    }
+
+                    $target.data('timer', setTimeout(function() {
+                        $selectedClone.animate({
+                            left: ui.position.left + 'px',
+                            top: ui.position.top + 'px'
+                        });
+
+                        $target
+                            .data('timer', null)
+                            .data('grouped', true);
+
+                    }, 80));
+
+                    $selectedClone.each(function(i, ele) {
+                        var $ele = $(ele), initPos = $ele.data('initPos');
+
+                        $ele.css({
+                            left: ui.position.left - ui.originalPosition.left + initPos.left + 'px'
+                            , top: ui.position.top - ui.originalPosition.top + initPos.top + 'px'
+                        });
+                    });
+                }
+
+                // start find circle
+                $.each(gCirclesPosition, function(i, circlePos) {
+                    var $circle;
+
+                    // in which circle
+                    if (pos.left >= circlePos.x1 && pos.left <= circlePos.x2 &&
+                        pos.top >= circlePos.y1 && pos.top <= circlePos.y2) {
+
+                        $circle = circlePos.$ele;
+
+                        // move to a new element
+                        if ($hover !== $circle) {
+                            $hover.length > 0 && $hover.removeClass('hover');
+                            $circle.addClass('hover');
+                        }
+
+                        // set to cache
+                        g$HoverCache = $circle;
+                        return false
+                    }
+                });
+
+                // if not in any circle, try to remove old cache
+                if (g$HoverCache.length === 0 && $hover.length > 0) {
+                    $hover.removeClass('hover');
+                }
+            })
+            .bind('dragstop', function(evt, ui) {
+                var $target = $(evt.target)
+                    , $circle
+                    ;
+
+                if (($circle = g$Circles.filter('.hover')).length > 0) {
+                    $circle.data('Circle').addMembers($('.people-list .person.clone-parent'));
+
+                    $target.data('selectedClone').remove();
+                    ui.helper.remove();
+                } else {
+
+                    // revert selected element
+                    $target.data('selectedClone').each(function(i, ele) {
+                        var $ele = $(ele)
+                            , pos = $ele.data('initPos');
+
+                        $ele.animate({
+                            left: pos.left + 'px'
+                            , top: pos.top + 'px'
+                        }, {
+                            duration: 500,
+                            complete: function() {
+                                $(this).remove();
+                            }
+                        });
+                    });
+
+                    ui.helper.clone().appendTo($target.parent()).animate({
+                        left: ui.originalPosition.left + 'px'
+                        , top: ui.originalPosition.top + 'px'
+                    }, {
+                        duration: 500,
+                        complete: function() {
+                            $(this).remove();
+                        }
+                    });
+
+                }
+
+                $target.data('selected').removeClass('clone-parent');
+
+                $target
+                    .removeClass('clone-parent')
+                    .data('selected', $([]))
+                    .data('selectedClone', $([]));
+
+                // remove circle hover
+                g$Circles.removeClass('hover');
+            });
+    });
+    </script>
+</body>
+</html>

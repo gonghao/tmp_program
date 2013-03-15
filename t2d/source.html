@@ -1,0 +1,206 @@
+<!doctype html>
+
+<!--
+stiff 1.0.5 (http://stiff-theme.tumblr.com)
+By: ThinkingStiff (http://thinkingstiff.com)
+-->
+
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="description" content="{MetaDescription}" />
+<meta name="keywords" content="{block:IfMetaKeywords}{text:Meta Keywords}, {block:IfMetaKeywords}tumblr, stiff theme, thinkingstiff" />
+<meta http-equiv="X-UA-Compatible" content="IE=9" />
+<title>{Title}</title>
+<link rel="shortcut icon" href="{Favicon}" />
+<link rel="alternate" type="application/rss+xml" title="{Title}" href="{RSS}" />
+<link rel="stylesheet" href="http://static.tumblr.com/lcpjkdb/LVylshbvz/stiff.css" />
+
+<meta name="if:Black Background" content="1"/>
+<meta name="if:Show About Section" content="1" />
+
+<meta name="text:Name Age Location" content="" />
+<meta name="text:Email" content="" />
+<meta name="text:Website 1 Name" content="" />
+<meta name="text:Website 1 URL" content="" />
+<meta name="text:Website 2 Name" content="" />
+<meta name="text:Website 2 URL" content="" />
+<meta name="text:Website 3 Name" content="" />
+<meta name="text:Website 3 URL" content="" />
+<meta name="text:Favorite Tumblr 1" content="" />
+<meta name="text:Favorite Tumblr 2" content="" />
+<meta name="text:Favorite Tumblr 3" content="" />
+<meta name="text:Favorite Tumblr 4" content="" />
+<meta name="text:Google Analytics ID" content="" />
+<meta name="text:Meta Keywords" content="" />
+
+<style>{CustomCSS}</style>
+</head>
+<body {block:IfBlackBackground}data-black-background="true"{/block:IfBlackBackground}>
+<!--[if lt IE 9]><div>Upgrade your browser to view this blog.</div><div style="display: none !important;"><![endif]-->
+
+<header id="main-header">
+
+    <h1 id="blog-title"><a href="/">{Title}</a></h1>
+
+    <nav class="main-navigation">
+    <ul>
+        <li><a href="/">{lang:Home}</a></li><!--
+     --><li><a href="/archive">{lang:Archive}</a></li><!--
+     --><li><a href="/random">{lang:Random}</a></li><!--
+     --><li><a href="{RSS}">{lang:RSS}</a></li><!--
+     --><li><a href="/search" id="search">{lang:Search}</a></li><!--
+ --></ul>
+    </nav>
+
+</header>
+
+<div id="aside-frame"><div id="aside-center">
+
+    <aside id="blog-followers">
+
+        {block:Likes}
+        <section id="like-section">
+        <h1>{lang:Likes}</h1>
+        {Likes limit="8" summarize="250" width="180"}
+        </section>
+        {/block:Likes}
+
+        {block:Following}
+
+        {block:IfFavoriteTumblr1}
+        <section id="favorites">
+        <h1>favorites</h1>
+        <ul><!--
+     --><li><a href="http://{text:Favorite Tumblr 1}.tumblr.com/"></a></li><!--
+     -->{block:IfFavoriteTumblr2}<li><a href="http://{text:Favorite Tumblr 2}.tumblr.com/"></a></li>{/block:IfFavoriteTumblr2}<!--
+     -->{block:IfFavoriteTumblr3}<li><a href="http://{text:Favorite Tumblr 3}.tumblr.com/"></a></li>{/block:IfFavoriteTumblr3}<!--
+     -->{block:IfFavoriteTumblr4}<li><a href="http://{text:Favorite Tumblr 4}.tumblr.com/"></a></li>{/block:IfFavoriteTumblr4}<!--
+     --></ul>
+        </section>
+        {/block:IfFavoriteTumblr1}
+
+        <section id="featured">
+        <h1>featured</h1>
+        <ul></ul>
+        </section>
+
+        <section id="following">
+        <h1>{lang:Following}</h1>
+        <ul>
+        {block:Followed}<li><a href="{FollowedURL}" title="{FollowedTitle}"><img src="{FollowedPortraitURL-40}" title="{FollowedTitle}" alt="{FollowedName}"/></a></li>{/block:Followed}
+        </ul>
+        </section>
+
+    {/block:Following}
+    </aside>
+
+    <aside id="blog-info">
+
+        <section id="blog-owner">
+        <h1>username</h1>
+        <a href="/"><img src="{PortraitURL-128}" alt="blog owner" id="blog-owner-image" /></a>
+        {Block:IfNameAgeLocation}<div id="name-age-location">{text:Name Age Location}</div>{/Block:IfNameAgeLocation}
+        </section>
+
+        {block:IfShowAboutSection}
+        <section id="about">
+        <h1>{lang:About}</h1>
+        <div id="about-body">{Description}</div>
+        </section>
+        {/block:IfShowAboutSection}
+
+        <section id="contact">
+        <h1>contact</h1>
+        <ul><!--
+        -->{block:AskEnabled}<li><a href="/ask" id="ask">ask</a></li>{/block:AskEnabled}<!--
+        -->{block:SubmissionsEnabled}<li><a href="/submit" id="submit">submit</a></li>{/block:SubmissionsEnabled}<!--
+        --><li><a id="follow-me">{lang:Follow me}</a></li><!--
+        -->{Block:IfEmail}<li><a href="mailto:{text:Email}">email</a></li>{/Block:IfEmail}<!--
+        -->{block:Twitter}<li><a href="https://twitter.com/{TwitterUsername}">twitter</a></li>{/block:Twitter}<!--
+        -->{Block:IfWebsite1URL}<li><a href="{text:Website 1 URL}">{Block:IfWebsite1Name}{text:Website 1 Name}{/Block:IfWebsite1Name}{Block:IfNotWebsite1Name}web{/Block:IfNotWebsite1Name}</a></li>{/Block:IfWebsite1URL}<!--
+        -->{Block:IfWebsite2URL}<li><a href="{text:Website 2 URL}">{Block:IfWebsite2Name}{text:Website 2 Name}{/Block:IfWebsite2Name}{Block:IfNotWebsite2Name}web{/Block:IfNotWebsite2Name}</a></li>{/Block:IfWebsite2URL}<!--
+        -->{Block:IfWebsite3URL}<li><a href="{text:Website 3 URL}">{Block:IfWebsite3Name}{text:Website 3 Name}{/Block:IfWebsite3Name}{Block:IfNotWebsite3Name}web{/Block:IfNotWebsite3Name}</a></li>{/Block:IfWebsite3URL}<!--
+        --></ul>
+        </section>
+
+        {block:HasPages}
+        <section id="pages">
+        <h1>{lang:Pages}</h1>
+        <ul>{block:Pages}<li><a href="{URL}">{Label}</a></li>{/block:Pages}</ul>
+        </section>
+        {/block:HasPages}
+
+    </aside>
+
+</div></div>
+
+<pre id="post-data">
+{"totalPages":"{TotalPages}","currentPage":"{CurrentPage}","nextPage":"{block:NextPage}{NextPage}{/block:NextPage}","search":"{block:SearchPage}true{/block:SearchPage}",{block:SearchPage}"searchCaption":"{lang:Search}","searchQuery":"{SearchQuery}","searchResults":"{lang:SearchResultCount results for SearchQuery}","searchNoResults":"{block:NoSearchResults}{lang:No results found}{/block:NoSearchResults}",
+
+{/block:SearchPage}"tag":"{block:TagPage}true{/block:TagPage}",{block:TagPage}"tagCaption":"{lang:Tagged}","tagResults":"{lang:Showing TagResultCount posts tagged Tag}",
+
+{/block:TagPage}"indexPage":"{block:IndexPage}true{/block:IndexPage}",
+"askLabel":"{AskLabel}",
+"submitLabel":"{SubmitLabel}",
+"searchLabel":"{lang:Search}",
+
+"posts":{
+{block:Posts}"{PostID}":{"id":"{PostID}","date":"{Year}-{MonthNumberWithZero}-{DayOfMonthWithZero}","noteCount": "{NoteCountWithLabel}","url":"{Permalink}","rebloggingUrl":"{ReblogURL}","reblog":"{block:Reblog}true{/block:Reblog}",{block:Reblog}
+"reblogParentUrl":"{block:RebloggedFromReblog}{ReblogParentURL}{/block:RebloggedFromReblog}","reblogParentName":"{block:RebloggedFromReblog}{ReblogParentName}{/block:RebloggedFromReblog}","reblogSourceUrl":"{block:ContentSource}{ReblogRootURL}{/block:ContentSource}","reblogSourceName":"{block:ContentSource}{ReblogRootName}{/block:ContentSource}","reblogSourceUrlHack":"{block:ContentSource}{SourceURL}{/block:ContentSource}",
+{/block:Reblog}"hasTags":"{block:HasTags}true{/block:HasTags}",
+{block:HasTags}"tags":[{block:Tags}{"tagUrl":"{TagURLChrono}","tag":"{URLEncodedTag}"},{/block:Tags}{}],"tagCaption":"{lang:Tags}",{/block:HasTags}"permalinkPage":"{block:PermalinkPage}true{/block:PermalinkPage}",{block:PermalinkPage}"notesUrl":"{PostNotesURL}",{/block:PermalinkPage}
+
+{block:Text}"type":"text","title":"{URLEncodedTitle}","body":"{URLEncodedBody}"
+
+{/block:Text}{block:Photo}"type":"photo","body":"{URLEncodedCaption}","photo":"{PhotoURL-500}","photoSmall":"{PhotoURL-75sq}","photoLarge":"{PhotoURL-HighRes}","downloadCaption":"{lang:Download}","photoAlt":"{URLEncodedPhotoAlt}"
+
+{/block:Photo}{block:Photoset}"type":"photoset","body":"{URLEncodedCaption}","photo":"{URLEncodedPhotoset-500}","photoSmall":"{URLEncodedPhotoset-250}"
+
+{/block:Photoset}{block:Quote}"type":"quote","body":"{URLEncodedQuote}","source":"{URLEncodedSource}"
+
+{/block:Quote}{block:Link}"type":"link","link":"{URL}","title":"{URLEncodedName}","body":"{URLEncodedDescription}"
+
+{/block:Link}{block:Chat}"type":"chat","title":"{block:Title}{URLEncodedTitle}{/block:Title}","lines":[{block:Lines}{"ordinal":"{Alt}","label":"{block:Label}{URLEncodedLabel}{/block:Label}","line":"{URLEncodedLine}"},{/block:Lines}{}]
+
+{/block:Chat}{block:Audio}"type":"audio","playCount":"{PlayCountWithLabel}","albumArt":"{block:AlbumArt}{AlbumArtURL}{/block:AlbumArt}","track":"{block:TrackName}{URLEncodedTrackName}{/block:TrackName}","artist":"{block:Artist}{URLEncodedArtist}{/block:Artist}","body":"{block:Caption}{URLEncodedCaption}{/block:Caption}","player":"{URLEncodedAudioPlayerBlack}"
+
+{/block:Audio}{block:Video}"type":"video","video":"{URLEncodedVideo-500}","body":"{block:Caption}{URLEncodedCaption}{/block:Caption}"
+
+{/block:Video}{block:Answer}"type":"answer","askerPicture":"{AskerPortraitURL-16}","asker":"{URLEncodedAsker}","question":"{URLEncodedQuestion}","ownerPicture":"{PortraitURL-16}","answer":"{URLEncodedAnswer}"{/block:Answer} },
+{/block:Posts}"":{} }}
+</pre>
+
+<div id="audio-hack">{block:Posts}{block:Audio}{AudioPlayerBlack}{/block:Audio}{/block:Posts}</div>
+
+<div id="post-view"><noscript>You need to enable Javascript to view this blog.</noscript></div>
+
+<div id="thumbnail-view">
+<div class="thumbnail-marker thumbnail-marker-top"></div>
+<div class="horizontal-scroll-button left-scroll">&#9664;</div>
+<ul id="thumbnails"></ul>
+<div class="horizontal-scroll-button right-scroll">&#9654;</div>
+<div class="thumbnail-marker thumbnail-marker-bottom"></div>
+</div>
+
+<footer id="footer">
+    <ul><!--
+    --><li><a href="http://stiff-theme.tumblr.com">stiff</a></li><!--
+    --><li><a href="http://www.tumblr.com/theme/32199">{lang:Install this theme}</a></li><!--
+    --><li><a href="http://thinkingstiff.com">thinkingstiff</a></li><!--
+    --><li>{lang:Powered by Tumblr 2}</li><!--
+    --></ul>
+    <a id="install-theme" href="http://www.tumblr.com/theme/32199"><img src="http://static.tumblr.com/lcpjkdb/grylq2cd9/install_theme.png" alt="Install Theme" /></a>
+</footer>
+
+<iframe id="like-it"></iframe>
+<div style="display:none !important;">{LinkOpenTag}{PhotoAlt}</div>
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.6.2/jquery.min.js"></script>
+<script src="http://static.tumblr.com/nwntwqn/Fyolskdx0/stiff.js"></script>
+<!--[if lt IE 9]></div><![endif]-->
+
+{block:IfGoogleAnalyticsID}<script async="async">var _gaq = _gaq || []; _gaq.push(['_setAccount', '{text:Google Analytics ID}']); _gaq.push(['_trackPageview']); (function(){var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true; ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js'; var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);})();</script>{/block:IfGoogleAnalyticsID}
+
+</body>
+</html>
